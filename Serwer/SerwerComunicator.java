@@ -5,11 +5,13 @@
  */
 package Serwer;
 
+import Client.InterfaceClient;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class SerwerComunicator extends UnicastRemoteObject
 
     private Registry rej;
     private Conversation conversation;
+    List<InterfaceClient> clients;
 
     public SerwerComunicator() throws Exception {
 
@@ -35,7 +38,7 @@ public class SerwerComunicator extends UnicastRemoteObject
         }
 
         conversation = new Conversation();
-
+        clients = new ArrayList<InterfaceClient>();
     }
 
     @Override
@@ -46,6 +49,18 @@ public class SerwerComunicator extends UnicastRemoteObject
     @Override
     public void createMessage(String sender, String message) throws RemoteException {
         conversation.addMessage(new Message(sender, message));
+        broadcastMessages();
+    }
+
+    @Override
+    public void registerClient(InterfaceClient client) throws RemoteException {
+        clients.add(client);
+    }
+    
+    public void broadcastMessages() throws RemoteException {
+        for(InterfaceClient client : clients) {
+            client.getConversation();
+        }
     }
 
     public static void main(String[] args) throws Exception {

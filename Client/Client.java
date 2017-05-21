@@ -9,6 +9,7 @@ import Serwer.*;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -17,7 +18,8 @@ import java.util.Scanner;
  *
  * @author Mateusz
  */
-public class Client {
+public class Client extends UnicastRemoteObject
+        implements InterfaceClient{
 
     private String name;
     private Registry registry;
@@ -46,6 +48,11 @@ public class Client {
         remoteObject.createMessage(name, input);
     }
 
+    /**
+     *
+     * @throws RemoteException
+     */
+    @Override
     public void getConversation() throws RemoteException {
         InterfaceConversation conversation = (InterfaceConversation) remoteObject.getConversation();
 
@@ -62,8 +69,10 @@ public class Client {
     }
 
     public void start() throws RemoteException {
+        
+        remoteObject.registerClient(this);
         while (true) {
-            getConversation();
+            //getConversation();
             newMessage();
 
         }

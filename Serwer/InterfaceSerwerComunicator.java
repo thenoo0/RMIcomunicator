@@ -5,6 +5,7 @@
  */
 package Serwer;
 
+import Client.InterfaceClient;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -18,5 +19,6 @@ public interface InterfaceSerwerComunicator extends Remote {
 
     public Remote getConversation() throws RemoteException;
     public void createMessage(String sender, String message) throws RemoteException;
+    public void registerClient(InterfaceClient client) throws RemoteException;
 
     }
